@@ -4,21 +4,21 @@ from pygame import Rect
 
 class Settings:
 
-    # 游戏设置
-    FPS = 60    # 游戏帧率
-    GAME_NAME = "坦克大战"  # 游戏标题
-    BOX_SIZE = 50   # 单位屏幕大小
-    BOX_RECT = Rect(0, 0, BOX_SIZE, BOX_SIZE)   # 单位屏幕矩形
-    SCREEN_RECT = Rect(0, 0, BOX_SIZE * 19, BOX_SIZE * 13)  # 屏幕矩形
-    SCREEN_COLOR = (0, 0, 0)    # 屏幕颜色
+    # cài đặt trò chơi
+    FPS = 60    # tốc độ khung hình trò chơi
+    GAME_NAME = "bắn xe tank"  # tựa đề trò chơi
+    BOX_SIZE = 50   #Kích thước màn hình đơn vị 
+    BOX_RECT = Rect(0, 0, BOX_SIZE, BOX_SIZE)   # box size
+    SCREEN_RECT = Rect(0, 0, BOX_SIZE * 19, BOX_SIZE * 13)  # màn hình
+    SCREEN_COLOR = (0, 0, 0)    # màu screen
 
-    # 通用变量
+    # Biến phổ quát
     LEFT = 0
     RIGHT = 1
     UP = 2
     DOWN = 3
 
-    # 地图
+    # bản đồ
     MAP_ONE = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ],
         [0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, ],
@@ -35,28 +35,28 @@ class Settings:
         [0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, ],
     ]
 
-    # 音频
+    # âm thanh
     BOOM_MUSIC = "resources/musics/boom.wav"
     FIRE_MUSIC = "resources/musics/fire.wav"
     HIT_MUSIC = "resources/musics/hit.wav"
 
-    # 坦克类型
+    # Loại xe tăng
     HERO = 0
-    ENEMY = 1
+    ENEMY = 9
 
-    # 我方坦克
-    HERO_IMAGE_NAME = "./resources/images/hero/hero1U.gif"
+    # xe tank màu vàng
+    HERO_IMAGE_NAME = "./resources/images/hero/hero1U.png"
     HERO_IMAGES = {
-        LEFT: "./resources/images/hero/hero1L.gif",
-        RIGHT: "./resources/images/hero/hero1R.gif",
-        UP: "./resources/images/hero/hero1U.gif",
-        DOWN: "./resources/images/hero/hero1D.gif"
+        LEFT: "./resources/images/hero/hero1L.png",
+        RIGHT: "./resources/images/hero/hero1R.png",
+        UP: "./resources/images/hero/hero1U.png",
+        DOWN: "./resources/images/hero/hero1D.png"
     }
     HERO_SPEED = 2
     BOSS_IMAGE = "./resources/images/5.png"
-    # 我方老家
+    # 
 
-    # 敌方坦克
+    # xr tank xanh
     ENEMY_IMAGES = {
         LEFT: "./resources/images/enemy/enemy2L.gif",
         RIGHT: "./resources/images/enemy/enemy2R.gif",
@@ -66,12 +66,12 @@ class Settings:
     ENEMY_COUNT = 5
     ENEMY_SPEED = 1
 
-    # 子弹
+    # bullet
     BULLET_IMAGE_NAME = "./resources/images/bullet/bullet.png"
     BULLET_RECT = Rect(0, 0, 5, 5)
     BULLET_SPEED = 5
 
-    # 0表示空白、1表示红墙、2表示铁墙、3表示草、4表示海、5表示鸟
+    #0 nghĩa là trống, 1 nghĩa là tường đỏ, 2 nghĩa là tường sắt, 3 nghĩa là cỏ, 4 nghĩa là biển và 5 nghĩa là .
     RED_WALL = 1
     IRON_WALL = 2
     WEED_WALL = 3
@@ -80,7 +80,7 @@ class Settings:
         f"resources/images/walls/{file}" for file in os.listdir("resources/images/walls/")
     ]
 
-    # 爆炸的图片
+    # hình ảnh vụ nổ
     BOOMS = [
         "resources/images/boom/" + file for file in os.listdir("resources/images/boom")
     ]
