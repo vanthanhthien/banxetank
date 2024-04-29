@@ -7,7 +7,6 @@ from settings import Settings
 
 class BaseSprite(pygame.sprite.Sprite):
     """
-    BaseSprite类，游戏中所有变化物体的底层父类
     Lớp BaseSprite, lớp cha cơ bản của tất cả các đối tượng thay đổi trong trò chơi
     """
     def __init__(self, image_name, screen):
@@ -19,7 +18,7 @@ class BaseSprite(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
     def update(self):
-        # di chuyển theo hướng
+        # Di chuyển theo hướng
         if self.direction == Settings.LEFT:
             self.rect.x -= self.speed
         elif self.direction == Settings.RIGHT:
@@ -39,7 +38,7 @@ class Bullet(BaseSprite):
 
 class TankSprite(BaseSprite):
     """
-    ImageSprite类，BaseSprite的子类，所有带图片的精灵的父类
+    Lớp TankSprite, lớp con của BaseSprite, lớp cha của tất cả các sprite có hình ảnh trong trò chơi
     """
     def __init__(self, image_name, screen):
         super().__init__(image_name, screen)
@@ -50,11 +49,9 @@ class TankSprite(BaseSprite):
 
     def shot(self):
         """
-        射击类，坦克调用该类发射子弹
-        :return:
+        Phương thức bắn đạn, được gọi khi xe tăng bắn đạn
         """
-
-        # 把消失的子弹移除
+        # Loại bỏ đạn đã biến mất
         self.__remove_sprites()
         if not self.is_alive:
             return
@@ -64,7 +61,7 @@ class TankSprite(BaseSprite):
             pygame.mixer.music.load(Settings.FIRE_MUSIC)
             pygame.mixer.music.play()
 
-        # 发射子弹
+        # Bắn đạn
         bullet = Bullet(Settings.BULLET_IMAGE_NAME, self.screen)
         bullet.direction = self.direction
         if self.direction == Settings.LEFT:
@@ -93,8 +90,7 @@ class TankSprite(BaseSprite):
 
     def __remove_sprites(self):
         """
-        移除无用的子弹
-        :return:
+        Loại bỏ các đạn không còn sử dụng
         """
         for bullet in self.bullets:
             if bullet.rect.bottom <= 0 or \
@@ -134,7 +130,7 @@ class Hero(TankSprite):
         self.direction = Settings.UP
         self.is_hit_wall = False
 
-        # 初始化英雄的位置
+        # Khởi tạo vị trí của nhân vật chính
         self.rect.centerx = Settings.SCREEN_RECT.centerx - Settings.BOX_RECT.width * 2
         self.rect.bottom = Settings.SCREEN_RECT.bottom
 
@@ -169,7 +165,7 @@ class Enemy(TankSprite):
         self.terminal = float(random.randint(40*2, 40*8))
 
     def random_turn(self):
-        # 随机转向
+        # Ngẫu nhiên chuyển hướng
         self.is_hit_wall = False
         directions = [i for i in range(4)]
         directions.remove(self.direction)
@@ -205,7 +201,7 @@ class Enemy(TankSprite):
             self.random_turn()
         else:
             super().update()
-            # 碰墙掉头
+            # Đổi hướng khi va chạm với tường
             self.terminal -= self.speed
 
 

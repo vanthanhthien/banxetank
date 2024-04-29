@@ -16,12 +16,11 @@ class TankWar:
     @staticmethod
     def __init_game():
         """
-        初始化游戏的一些设置
-        :return:
+        Khởi tạo các cài đặt của trò chơi
         """
-        pygame.init()   # 初始化pygame模块
-        pygame.display.set_caption(Settings.GAME_NAME)  # 设置窗口标题
-        pygame.mixer.init()    # 初始化音频模块
+        pygame.init()   # Khởi tạo pygame
+        pygame.display.set_caption(Settings.GAME_NAME)  # Đặt tiêu đề cửa sổ
+        pygame.mixer.init()    # Khởi tạo âm thanh
 
     def __create_sprite(self):
         self.hero = Hero(Settings.HERO_IMAGE_NAME, self.screen)
@@ -37,8 +36,7 @@ class TankWar:
 
     def __draw_map(self):
         """
-        绘制地图
-        :return:
+        Vẽ bản đồ
         """
         for y in range(len(Settings.MAP_ONE)):
             for x in range(len(Settings.MAP_ONE[y])):
@@ -59,69 +57,69 @@ class TankWar:
                 self.walls.add(wall)
 
     def __check_keydown(self, event):
-        """检查按下按钮的事件"""
+        """Kiểm tra sự kiện khi nhấn phím"""
         if event.key == pygame.K_LEFT:
-            # 按下左键
+            # Nhấn phím mũi tên trái
             self.hero.direction = Settings.LEFT
             self.hero.is_moving = True
             self.hero.is_hit_wall = False
         elif event.key == pygame.K_RIGHT:
-            # 按下右键
+            # Nhấn phím mũi tên phải
             self.hero.direction = Settings.RIGHT
             self.hero.is_moving = True
             self.hero.is_hit_wall = False
         elif event.key == pygame.K_UP:
-            # 按下上键
+            # Nhấn phím mũi tên lên
             self.hero.direction = Settings.UP
             self.hero.is_moving = True
             self.hero.is_hit_wall = False
         elif event.key == pygame.K_DOWN:
-            # 按下下键
+            # Nhấn phím mũi tên xuống
             self.hero.direction = Settings.DOWN
             self.hero.is_moving = True
             self.hero.is_hit_wall = False
         elif event.key == pygame.K_SPACE:
-            # 坦克发子弹
+            # Bắn đạn
             self.hero.shot()
 
     def __check_keyup(self, event):
-        """检查松开按钮的事件"""
+        """Kiểm tra sự kiện khi nhả phím"""
         if event.key == pygame.K_LEFT:
-            # 松开左键
+            # Nhả phím mũi tên trái
             self.hero.direction = Settings.LEFT
             self.hero.is_moving = False
         elif event.key == pygame.K_RIGHT:
-            # 松开右键
+            # Nhả phím mũi tên phải
             self.hero.direction = Settings.RIGHT
             self.hero.is_moving = False
         elif event.key == pygame.K_UP:
-            # 松开上键
+            # Nhả phím mũi tên lên
             self.hero.direction = Settings.UP
             self.hero.is_moving = False
         elif event.key == pygame.K_DOWN:
-            # 松开下键
+            # Nhả phím mũi tên xuống
             self.hero.direction = Settings.DOWN
             self.hero.is_moving = False
 
     def __event_handler(self):
         for event in pygame.event.get():
-            # 判断是否是退出游戏
+            # Kiểm tra sự kiện thoát game
             if event.type == pygame.QUIT:
                 TankWar.__game_over()
             elif event.type == pygame.KEYDOWN:
-                TankWar.__check_keydown(self, event)
+                self.__check_keydown(event)
             elif event.type == pygame.KEYUP:
-                TankWar.__check_keyup(self, event)
+                self.__check_keyup(event)
 
     def __check_collide(self):
-        # 保证坦克不移出屏幕
+        # Đảm bảo xe tăng không di chuyển ra khỏi màn hình
         self.hero.hit_wall()
         for enemy in self.enemies:
             enemy.hit_wall_turn()
 
-        # 子弹击中墙
+        # Đạn trúng tường
         for wall in self.walls:
-            # 我方英雄子弹击中墙
+            # Đạn của nhân vật chính trúng tường
             for bullet in self.hero.bullets:
                 if pygame.sprite.collide_rect(wall, bullet):
                     if wall.type == Settings.RED_WALL:
@@ -131,7 +129,7 @@ class TankWar:
                         self.game_still = False
                     elif wall.type == Settings.IRON_WALL:
                         bullet.kill()
-            # 敌方英雄子弹击中墙
+            # Đạn của kẻ địch trúng tường
             for enemy in self.enemies:
                 for bullet in enemy.bullets:
                     if pygame.sprite.collide_rect(wall, bullet):
@@ -143,24 +141,24 @@ class TankWar:
                         elif wall.type == Settings.IRON_WALL:
                             bullet.kill()
 
-            # 我方坦克撞墙
+            # Xe tăng chính của chúng ta va chạm vào tường
             if pygame.sprite.collide_rect(self.hero, wall):
-                # 不可穿越墙
+                # Không thể xuyên qua tường
                 if wall.type == Settings.RED_WALL or wall.type == Settings.IRON_WALL or wall.type == Settings.BOSS_WALL:
                     self.hero.is_hit_wall = True
-                    # 移出墙内
+                    # Di chuyển ra khỏi tường
                     self.hero.move_out_wall(wall)
 
-            # 敌方坦克撞墙
+            # Xe tăng của kẻ địch va chạm vào tường
             for enemy in self.enemies:
                 if pygame.sprite.collide_rect(wall, enemy):
                     if wall.type == Settings.RED_WALL or wall.type == Settings.IRON_WALL or wall.type == Settings.BOSS_WALL:
                         enemy.move_out_wall(wall)
                         enemy.random_turn()
 
-        # 子弹击中、敌方坦克碰撞、敌我坦克碰撞
+        # Đạn trúng, xe tăng kẻ địch va chạm, va chạm giữa xe tăng của địch và của chúng ta
         pygame.sprite.groupcollide(self.hero.bullets, self.enemies, True, True)
-        # 敌方子弹击中我方
+        # Đạn của kẻ địch trúng vào chúng ta
         for enemy in self.enemies:
             for bullet in enemy.bullets:
                 if pygame.sprite.collide_rect(bullet, self.hero):
@@ -186,15 +184,15 @@ class TankWar:
         self.__create_sprite()
         while True and self.hero.is_alive and self.game_still:
             self.screen.fill(Settings.SCREEN_COLOR)
-            # 1、设置刷新帧率
+            # 1、Thiết lập tốc độ khung hình
             self.clock.tick(Settings.FPS)
-            # 2、事件监听
+            # 2、Xử lý sự kiện
             self.__event_handler()
-            # 3、碰撞监测
+            # 3、Kiểm tra va chạm
             self.__check_collide()
-            # 4、更新/绘制精灵/经理组
+            # 4、Cập nhật/vẽ các đối tượng/đối tượng quản lý
             self.__update_sprites()
-            # 5、更新显示
+            # 5、Cập nhật hiển thị
             pygame.display.update()
         self.__game_over()
 

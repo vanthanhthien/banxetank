@@ -74,12 +74,12 @@ def func():
     layout = [
         [sg.Image(files[0], size=(30, 30), enable_events=True) for i in range(19)] for j in range(15)
     ]
-    layout.append([sg.Button("保存地图"), sg.Button("重置"), sg.Button("退出")])
+    layout.append([sg.Button("Lưu bản đồ"), sg.Button("Đặt lại"), sg.Button("Thoát")])
 
-    window = sg.Window("绘制地图", layout)
+    window = sg.Window("Vẽ bản đồ", layout)
     while True:
         event, values = window.read()
-        if event in (None, "确定"):
+        if event in (None, "Xác nhận"):
             window.refresh()
         elif event in range(285):
             print(event)
@@ -89,7 +89,7 @@ def func():
             elem.Filename = files[num]
             elem.Update(files[num], size=(30, 30))
             window.refresh()
-        elif event in (None, "保存地图"):
+        elif event in (None, "Lưu bản đồ"):
             lines = []
             line = []
             img = 0
@@ -112,7 +112,7 @@ def func():
 
             with open("map.txt", "w") as f:
                 f.write(content)
-        elif event == "退出":
+        elif event == "Thoát":
             window.close()
             exit()
 
