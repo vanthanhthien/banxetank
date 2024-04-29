@@ -203,7 +203,7 @@ class TankWar:
             text_rect = text.get_rect(center=(Settings.SCREEN_RECT.width // 2, Settings.SCREEN_RECT.height // 2))
             self.screen.blit(text, text_rect)
             pygame.display.update()
-            pygame.time.delay(5600)
+            pygame.time.delay(5500)
             self.game_still = False
 
 
@@ -212,10 +212,6 @@ class TankWar:
         """
         Hiển thị thông báo "MISSION FAILED" khi trò chơi kết thúc với thất bại.
         """
-        if not self.failed_sound_played:
-            # Phát âm thanh failed nếu chưa phát
-            pygame.mixer.Channel(1).play(pygame.mixer.Sound(Settings.FAILED_MUSIC))
-            self.failed_sound_played = True
 
         # Hiển thị thông báo "MISSION FAILED"
         font = pygame.font.Font('freesansbold.ttf', 60)
@@ -223,7 +219,7 @@ class TankWar:
         text_rect = text.get_rect(center=(Settings.SCREEN_RECT.width // 2, Settings.SCREEN_RECT.height // 2))
         self.screen.blit(text, text_rect)
         pygame.display.update()
-        pygame.time.delay(5300)
+        pygame.time.delay(2000)
 
     def run_game(self):
         self.__init_game()
@@ -252,9 +248,55 @@ class TankWar:
             pygame.display.update()
 
         if not mission_completed:
+            if not self.failed_sound_played:
+                # Phát âm thanh failed nếu chưa phát
+                pygame.mixer.Channel(1).play(pygame.mixer.Sound(Settings.FAILED_MUSIC))
+                self.failed_sound_played = True
+
             self.check_mission_failed()
+            self.show_game_over_screen()
 
         self.__game_over()
+
+    def show_game_over_screen(self):
+        running = True
+        font = pygame.font.SysFont('freesansbold.ttf', 50)  # Sử dụng font chữ Arial với kích thước 36
+
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.__game_over()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_r:
+                        # Chơi lại game
+                        self.reset_game()
+                        running = False
+                    elif event.key == pygame.K_e:
+                        # Thoát game
+                        self.__game_over()
+
+            # Hiển thị các nút lựa chọn
+            self.screen.fill(Settings.SCREEN_COLOR)
+            text = font.render('MISSION FAILED', True, (255, 0, 0))
+            text_rect = text.get_rect(center=(Settings.SCREEN_RECT.width // 2, Settings.SCREEN_RECT.height // 3))
+            self.screen.blit(text, text_rect)
+
+            option1 = font.render('Retry (R)', True, (0, 255, 0))
+            option1_rect = option1.get_rect(center=(Settings.SCREEN_RECT.width // 2, Settings.SCREEN_RECT.height // 2))
+            self.screen.blit(option1, option1_rect)
+
+            option2 = font.render('Exit (E)', True, (0, 255, 0))
+            option2_rect = option2.get_rect(
+                center=(Settings.SCREEN_RECT.width // 2, (Settings.SCREEN_RECT.height // 2) + 50))
+            self.screen.blit(option2, option2_rect)
+
+            pygame.display.update()
+
+    def reset_game(self):
+        # Reset trò chơi
+        self.game_still = True
+        self.failed_sound_played = False
+        self.run_game()
 
     @staticmethod
     def __game_over():
