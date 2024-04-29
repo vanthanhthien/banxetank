@@ -208,7 +208,7 @@ class TankWar:
         self.__init_game()
         self.__create_sprite()
 
-        mission_completed = False
+        mission_completed = False  # Thêm biến cờ để đánh dấu nhiệm vụ đã hoàn thành
 
         while True and self.hero.is_alive and self.game_still:
             self.screen.fill(Settings.SCREEN_COLOR)
@@ -219,16 +219,16 @@ class TankWar:
             # 3、Kiểm tra va chạm
             self.__check_collide()
             # 4、Kiểm tra điều kiện hoàn thành nhiệm vụ
-            if not mission_completed:
+            if not mission_completed:  # Kiểm tra nhiệm vụ đã hoàn thành chưa
                 self.check_mission_completed()
                 if len(self.enemies) == 0:
-                    mission_completed = True
+                    mission_completed = True  # Đánh dấu nhiệm vụ đã hoàn thành
             # 5、Cập nhật/vẽ các đối tượng/đối tượng quản lý
             self.__update_sprites()
             # 6、Cập nhật hiển thị
             pygame.display.update()
 
-        if not mission_completed:
+        if not mission_completed:  # Kiểm tra nhiệm vụ đã hoàn thành chưa trước khi hiển thị "MISSION FAILED"
             self.check_mission_failed()
         self.__game_over()
 
