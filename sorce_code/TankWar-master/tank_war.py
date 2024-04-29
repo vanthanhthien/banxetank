@@ -3,6 +3,7 @@ from sprites import *
 
 
 class TankWar:
+    NUM_CHANNELS = 2  # Đặt số kênh âm thanh
 
     def __init__(self):
         self.screen = pygame.display.set_mode(Settings.SCREEN_RECT.size)
@@ -12,6 +13,8 @@ class TankWar:
         self.enemies = None
         self.enemy_bullets = None
         self.walls = None
+        self.failed_sound_played = False
+
 
     @staticmethod
     def __init_game():
@@ -20,7 +23,14 @@ class TankWar:
         """
         pygame.init()   # Khởi tạo pygame
         pygame.display.set_caption(Settings.GAME_NAME)  # Đặt tiêu đề cửa sổ
-        pygame.mixer.init()    # Khởi tạo âm thanh
+        pygame.mixer.init()
+
+        # Cài đặt âm lượng cho các kênh âm thanh
+        for _ in range(TankWar.NUM_CHANNELS):
+            pygame.mixer.Channel(_).set_volume(0.5)  # Sử dụng chỉ số kênh để tạo kênh mới
+
+        # Phát nhạc nền
+        pygame.mixer.Channel(0).play(pygame.mixer.Sound(Settings.BACKGROUND_MUSIC))
 
     def __create_sprite(self):
         self.hero = Hero(Settings.HERO_IMAGE_NAME, self.screen)
@@ -184,25 +194,36 @@ class TankWar:
         Kiểm tra xem tất cả kẻ địch đã bị tiêu diệt chưa.
         Nếu đã tiêu diệt hết, hiển thị thông báo "Mission Completed" và thoát chương trình.
         """
+        # Phát nhạc nền
+        pygame.mixer.Channel(1).play(pygame.mixer.Sound(Settings.COMPLETED_MUSIC))
+
         if len(self.enemies) == 0:
             font = pygame.font.Font('freesansbold.ttf', 60)
             text = font.render('MISSION COMPLETED', True, (0, 255, 0))
             text_rect = text.get_rect(center=(Settings.SCREEN_RECT.width // 2, Settings.SCREEN_RECT.height // 2))
             self.screen.blit(text, text_rect)
             pygame.display.update()
-            pygame.time.delay(2000)
+            pygame.time.delay(5600)
             self.game_still = False
+
+
 
     def check_mission_failed(self):
         """
         Hiển thị thông báo "MISSION FAILED" khi trò chơi kết thúc với thất bại.
         """
+        if not self.failed_sound_played:
+            # Phát âm thanh failed nếu chưa phát
+            pygame.mixer.Channel(1).play(pygame.mixer.Sound(Settings.FAILED_MUSIC))
+            self.failed_sound_played = True
+
+        # Hiển thị thông báo "MISSION FAILED"
         font = pygame.font.Font('freesansbold.ttf', 60)
         text = font.render('MISSION FAILED', True, (255, 0, 0))
         text_rect = text.get_rect(center=(Settings.SCREEN_RECT.width // 2, Settings.SCREEN_RECT.height // 2))
         self.screen.blit(text, text_rect)
         pygame.display.update()
-        pygame.time.delay(2000)
+        pygame.time.delay(5300)
 
     def run_game(self):
         self.__init_game()
@@ -211,6 +232,7 @@ class TankWar:
         mission_completed = False  # Thêm biến cờ để đánh dấu nhiệm vụ đã hoàn thành
 
         while True and self.hero.is_alive and self.game_still:
+
             self.screen.fill(Settings.SCREEN_COLOR)
             # 1、Thiết lập tốc độ khung hình
             self.clock.tick(Settings.FPS)
@@ -219,17 +241,19 @@ class TankWar:
             # 3、Kiểm tra va chạm
             self.__check_collide()
             # 4、Kiểm tra điều kiện hoàn thành nhiệm vụ
-            if not mission_completed:  # Kiểm tra nhiệm vụ đã hoàn thành chưa
+            if not mission_completed:
                 self.check_mission_completed()
                 if len(self.enemies) == 0:
-                    mission_completed = True  # Đánh dấu nhiệm vụ đã hoàn thành
+                    mission_completed = True
+
             # 5、Cập nhật/vẽ các đối tượng/đối tượng quản lý
             self.__update_sprites()
             # 6、Cập nhật hiển thị
             pygame.display.update()
 
-        if not mission_completed:  # Kiểm tra nhiệm vụ đã hoàn thành chưa trước khi hiển thị "MISSION FAILED"
+        if not mission_completed:
             self.check_mission_failed()
+
         self.__game_over()
 
     @staticmethod

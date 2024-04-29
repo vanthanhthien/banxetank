@@ -38,6 +38,9 @@ class Settings:
     BOOM_MUSIC = "resources/musics/boom.wav"
     FIRE_MUSIC = "resources/musics/fire.wav"
     HIT_MUSIC = "resources/musics/hit.wav"
+    BACKGROUND_MUSIC = "resources/musics/background.wav"
+    COMPLETED_MUSIC = "resources/musics/completed.wav"
+    FAILED_MUSIC = "resources/musics/failed.wav"
 
     # Loại xe tăng
     HERO = 0
