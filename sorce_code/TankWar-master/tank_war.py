@@ -179,9 +179,37 @@ class TankWar:
         self.screen.blit(self.hero.image, self.hero.rect)
         self.walls.draw(self.screen)
 
+    def check_mission_completed(self):
+        """
+        Kiểm tra xem tất cả kẻ địch đã bị tiêu diệt chưa.
+        Nếu đã tiêu diệt hết, hiển thị thông báo "Mission Completed" và thoát chương trình.
+        """
+        if len(self.enemies) == 0:
+            font = pygame.font.Font('freesansbold.ttf', 60)
+            text = font.render('MISSION COMPLETED', True, (0, 255, 0))
+            text_rect = text.get_rect(center=(Settings.SCREEN_RECT.width // 2, Settings.SCREEN_RECT.height // 2))
+            self.screen.blit(text, text_rect)
+            pygame.display.update()
+            pygame.time.delay(2000)
+            self.game_still = False
+
+    def check_mission_failed(self):
+        """
+        Hiển thị thông báo "MISSION FAILED" khi trò chơi kết thúc với thất bại.
+        """
+        font = pygame.font.Font('freesansbold.ttf', 60)
+        text = font.render('MISSION FAILED', True, (255, 0, 0))
+        text_rect = text.get_rect(center=(Settings.SCREEN_RECT.width // 2, Settings.SCREEN_RECT.height // 2))
+        self.screen.blit(text, text_rect)
+        pygame.display.update()
+        pygame.time.delay(2000)
+
     def run_game(self):
         self.__init_game()
         self.__create_sprite()
+
+        mission_completed = False
+
         while True and self.hero.is_alive and self.game_still:
             self.screen.fill(Settings.SCREEN_COLOR)
             # 1、Thiết lập tốc độ khung hình
@@ -190,10 +218,18 @@ class TankWar:
             self.__event_handler()
             # 3、Kiểm tra va chạm
             self.__check_collide()
-            # 4、Cập nhật/vẽ các đối tượng/đối tượng quản lý
+            # 4、Kiểm tra điều kiện hoàn thành nhiệm vụ
+            if not mission_completed:
+                self.check_mission_completed()
+                if len(self.enemies) == 0:
+                    mission_completed = True
+            # 5、Cập nhật/vẽ các đối tượng/đối tượng quản lý
             self.__update_sprites()
-            # 5、Cập nhật hiển thị
+            # 6、Cập nhật hiển thị
             pygame.display.update()
+
+        if not mission_completed:
+            self.check_mission_failed()
         self.__game_over()
 
     @staticmethod

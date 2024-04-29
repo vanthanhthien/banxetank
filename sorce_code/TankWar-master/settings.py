@@ -5,7 +5,7 @@ class Settings:
 
     # Cài đặt trò chơi
     FPS = 60    # Tần số khung hình của trò chơi
-    GAME_NAME = "Đại chiến xe tăng"  # Tiêu đề của trò chơi
+    GAME_NAME = "Đại Chiến Xe Tăng"  # Tiêu đề của trò chơi
     BOX_SIZE = 50   # Kích thước của một ô trên màn hình
     BOX_RECT = Rect(0, 0, BOX_SIZE, BOX_SIZE)   # Hình chữ nhật của một ô trên màn hình
     SCREEN_RECT = Rect(0, 0, BOX_SIZE * 19, BOX_SIZE * 13)  # Hình chữ nhật của màn hình
